@@ -3,9 +3,43 @@
 
 {% block title %}Home page{% endblock title %}
 
+{% block breadcrumb %}
+<li class="breadcrumb-item active">
+  <a href="{% url 'home' %}" aria-current="page">Home</a>
+</li>
+{% endblock %}
+
 {% block content %}
-<div class="pricing-header px-3 py-3 pt-md-5 pb-md-4 mx-auto text-center">
-  <img src="{% static 'images/logo.png' %}" class="img-fluid" alt="DjangoX logo"/>
-  <p class="lead">A Django starter project with batteries.</p>
+<div class="container mt-5">
+  <h1 class="text-center mb-4">Welcome to SafePass</h1>
+  <p class="lead text-center">Your trusted solution for managing passwords securely and efficiently.</p>
+
+  <div class="row mt-5">
+      <div class="col-md-4 text-center">
+          <i class="fas fa-shield-alt fa-3x"></i>
+          <h3>Top-Notch Security</h3>
+          <p>End-to-end encryption ensures your passwords are always safe.</p>
+      </div>
+      <div class="col-md-4 text-center">
+          <i class="fas fa-mobile-alt fa-3x"></i>
+          <h3>Multi-Platform</h3>
+          <p>Access your passwords from any device, anywhere, anytime.</p>
+      </div>
+      <div class="col-md-4 text-center">
+          <i class="fas fa-cloud-upload-alt fa-3x"></i>
+          <h3>Automatic Backup</h3>
+          <p>Your data is automatically backed up to prevent data loss.</p>
+      </div>
+  </div>
+
+  <div class="text-center mt-5">
+      {% if user.is_authenticated %}
+          {% comment %} <a href="{% url 'dashboard' %}" class="btn btn-primary btn-lg">Go to Dashboard</a> {% endcomment %}
+          <span>Dashboard</span>
+      {% else %}
+          <a href="{% url 'account_login' %}" class="btn btn-primary btn-lg">Get Started</a>
+          <a href="{% url 'account_signup' %}" class="btn btn-secondary btn-lg">Login</a>
+      {% endif %}
+  </div>
 </div>
 {% endblock content %}

@@ -2,6 +2,42 @@
 
 {% block title %}About page{% endblock %}
 
+{% block breadcrumb %}
+<li class="breadcrumb-item active">
+  <a href="{% url 'about' %}" aria-current="page">About Us</a>
+</li>
+{% endblock %}
+
 {% block content %}
-<h1>About page</h1>
+
+<div class="container mt-2">
+  <h1 class="mb-4">About Us</h1>
+
+  <h2 class="mb-3">Welcome to SecurePass - Your Trusted Password Manager</h2>
+  <p>In today's digital world, managing multiple passwords can be overwhelming. With the increasing number of online accounts and the ever-present threat of cyber-attacks, it's more important than ever to ensure your passwords are strong, unique, and securely stored. At SecurePass, we believe that security should be simple, accessible, and reliable for everyone.</p>
+
+  <h3 class="mt-4 mb-3">Our Mission</h3>
+  <p>Our mission is to provide a safe and intuitive platform for managing your passwords and sensitive information. We understand that security is not just about technology, but also about trust. That’s why we’ve built SecurePass with the highest standards of security and usability in mind. We aim to make your digital life safer and easier by offering a robust solution that keeps your data protected, while remaining user-friendly.</p>
+
+  <h3 class="mt-4 mb-3">Key Features</h3>
+  <ul>
+      <li><strong>End-to-End Encryption:</strong> Your passwords and sensitive data are encrypted using advanced cryptographic algorithms, ensuring that only you can access your information.</li>
+      <li><strong>User-Friendly Interface:</strong> We've designed SecurePass with simplicity in mind, so you can easily manage your passwords without any hassle.</li>
+      <li><strong>Multi-Platform Support:</strong> Access your passwords on any device, whether you're on your desktop, tablet, or smartphone.</li>
+      <li><strong>Secure Sharing:</strong> Share passwords securely with trusted contacts using our built-in sharing feature.</li>
+      <li><strong>Automatic Backup:</strong> Your data is automatically backed up, so you never have to worry about losing access to your information.</li>
+  </ul>
+
+  <!-- 
+  <h3 class="mt-4 mb-3">Why Choose SecurePass?</h3>
+  <p><strong>Security First:</strong> We prioritize your security above all else. With industry-leading encryption and regular security updates, you can trust that your data is safe with us.</p>
+  <p><strong>Transparency:</strong> We believe in being open and transparent with our users. You can review our security practices, privacy policy, and terms of service at any time.</p>
+  <p><strong>Support:</strong> Our dedicated support team is always here to help. Whether you have a question, need assistance, or have a suggestion, we're just a click away.</p>
+
+  <h3 class="mt-4 mb-3">Our Commitment</h3>
+  <p>At SecurePass, we’re committed to constantly improving and evolving our app to meet the changing needs of our users. We’re passionate about security and are dedicated to providing you with the best tools to keep your digital life safe.</p>
+  <p>Thank you for choosing SecurePass. Together, we can make your online experience more secure and stress-free.</p>
+  -->
+</div>
+
 {% endblock content %}

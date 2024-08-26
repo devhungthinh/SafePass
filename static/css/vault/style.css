@@ -1,0 +1,23 @@
+/* Ensure the alert container is positioned absolutely */
+#alertContainer {
+  position: absolute;
+  top: 10px;
+  /* Adjust as needed */
+  left: 50%;
+  transform: translateX(-50%);
+  width: 90%;
+  /* Adjust width as needed */
+  z-index: 1050;
+  /* Ensure the alert is above other content */
+}
+
+/* Optional: Style the dismiss button */
+.alert-dismissible .btn-close {
+  padding: .2rem .5rem;
+  margin: .2rem .5rem;
+}
+
+.hidden-input {
+  position: absolute;
+  left: -99999px;
+}

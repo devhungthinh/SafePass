@@ -1,0 +1,83 @@
+<div>
+  <p class="h2 mb-4 fw-medium text-center py-2">
+    {{ vault.name }}
+    {% if created %}
+      <span class="fs-6 badge rounded-pill bg-success">
+        Created
+      </span>
+    {% endif %}
+
+    {% if updated %}
+      <span class="fs-6 badge rounded-pill bg-danger">
+        Updated
+      </span>
+    {% endif %}
+  <p>
+    
+  <p class="mb-2">
+    <strong>Priority: </strong>
+    {% if vault.priority == "low" %}
+      <span class="badge rounded-pill bg-secondary">
+        {{ vault.priority }}
+      </span>
+    {% elif vault.priority == "medium" %}
+      <span class="badge rounded-pill bg-dark">
+        {{ vault.priority }}
+      </span>
+    {% elif vault.priority == "high" %}
+      <span class="badge rounded-pill bg-warning">
+        {{ vault.priority }}
+      </span>
+    {% elif vault.priority == "critical" %}
+      <span class="badge rounded-pill bg-danger">
+        {{ vault.priority }}
+      </span>
+    {% endif %}
+  </p>
+  <p class="mb-2"><strong>Description</strong></p>
+  <p class="ps-3">
+    {% if vault.description %}
+      {{ vault.description }}
+    {% else %}
+      The description of {{vault.name}} is currently empty.
+    {% endif %}
+  </p>
+
+  <p class="mb-2"><strong>Created on:</strong> {{ vault.created_at|date:"b j, Y, g:i a" }}</p>
+
+  <p class="mb-2"><strong>Last update on:</strong> {{ vault.updated_at|date:"b j, Y, g:i a" }}</p>
+
+  <p class="mb-2 fw-bold">
+    Password List
+  </p>
+  <ul class="mb-2 ps-3 list-group list-group-flush list-unstyled">
+    {% for password_entry in vault.password_entries.all %}
+      <li class="mb-2 list-group-item d-flex justify-content-between align-items-center">
+        <a class="p-1 text-decoration-none text-white bg-primary rounded-2" 
+          href="{{ password_entry.get_absolute_url }}">
+          {{ password_entry.title }}
+        </a>
+        <button
+          class="btn border-0 cursor-pointer"
+          hx-delete="{% url 'vault:vault_remove_password' pk=password_entry.pk %}"
+          hx-trigger="click"
+          hx-target="closest li"
+          confirm-with-sweet-alert="true"
+        >
+          <i class="fa-solid fa-delete-left fa-2x"></i>
+        </button>
+      </li>
+    {% empty %}
+      <li class="list-group-item">
+        The current vault contains no saved password entries.
+      </li>
+    {% endfor %}
+  </ul>
+</div>
+
+<div id="vault-update" hx-swap-oob="true">
+  <a href="{% url 'vault:vault_update' pk=vault.pk %}"
+    class="btn btn-secondary">
+    Edit
+  </a>
+</div>

@@ -1,0 +1,204 @@
+{% extends '_base.html' %}
+{% load static %}
+{% load custom_tags %}
+
+{% block title %}Vault List Page{% endblock %}
+
+{% block breadcrumb %}
+<li class="breadcrumb-item active">
+  <a href="{% url 'vault:vault_list' %}" aria-current="page">Vaults</a>
+</li>
+{% endblock %}
+
+{% block content %}
+
+<div class="mb-3 d-flex justify-content-between align-items-center">
+  <p class="fw-medium">All Vaults</p>
+  <a href="{% url 'vault:vault_create' %}" class="btn btn-outline-primary">Create Vault</a>
+</div>
+
+<div class="mb-3 d-flex justify-content-between align-items-center">
+  <div class="btn-group gap-2" role="group" aria-label="Vault list action group">
+    <div id="btn-group-to-order-vault-list" 
+      class="dropdown">
+      <button
+        id="order-vault-list"
+        class="btn btn-outline-secondary dropdown-toggle"
+        type="button"
+        data-bs-toggle="dropdown"
+        aria-expanded="false"
+      >
+        Order by
+      </button>
+      <ul id="order-vault-list-dropdown-menu"
+        class="dropdown-menu"
+        aria-labelledby="order-vault">
+      </ul>
+    </div>
+
+    <form
+      class="d-flex"
+      hx-get="{% url 'vault:vault_list_rows' %}"
+      hx-target="#vault-list-table tbody"
+      hx-swap="innerHTML"
+      hx-indicator="#spinner"
+    >
+      <div class="input-group position-relative">
+        <input
+          hx-get="{% url 'vault:vault_list_rows' %}"
+          hx-target="#vault-list-table tbody"
+          hx-swap="innerHTML"
+          hx-indicator="#spinner"
+          id="search-vault-input"
+          role="search-input"
+          type="text"
+          name="query"
+          class="form-control"
+          placeholder="Search"
+          aria-label="Search"
+          aria-describedby="search-vault-btn"
+        >
+        <button id="search-clear" class="border-0 bg-transparent position-absolute text-secondary top-50 end-0 translate-middle z-3">
+          <i class="fa-regular fa-circle-xmark"></i>
+        </button>
+      </div>
+      <button id="search-vault-btn" 
+        class="btn btn-outline-primary"
+        type="submit"
+      >
+        <i class="fa-solid fa-magnifying-glass"></i>
+      </button>
+    </form>
+  </div>
+  <div class="mb-3 d-flex justify-content-start align-items-center">
+    <span class="fw-medium me-2">
+      Processing Status:
+    </span>
+    <img
+      id="spinner"
+      class="htmx-indicator"
+      src="{% static 'images/triangles-loading-indicator.gif' %}"
+      alt="Loading..."
+    />
+  </div>
+</div>
+
+<div class="scrollable-wrapper">
+<table
+  id="vault-list-table"
+  class="table table-responsive-md table-hover"
+  hx-trigger="load"
+  hx-get="{% page_urlencode %}"
+  hx-target="table#vault-list-table tbody"
+  hx-swap="innerHTML"
+  hx-indicator="#spinner"
+  style="max-height: 100px;"
+>
+  <thead>
+    <tr class="z-3 bg-white">
+      <th class="text-center align-middle">
+        <input type="checkbox" id="select-all"
+          class="form-check-input content-invisible d-inline-block p-2" />
+      </th>
+      <th class="text-center align-middle">
+        Name
+      </th>
+      <th class="text-center align-middle">
+        Actions
+      </th>
+    </tr>
+  </thead>
+  <tbody>
+    <!-- 
+      Paginated vault list rows taken from htmx
+      rendered after table loaded. 
+    -->
+  </tbody>
+</table>
+</div>
+
+<!-- The action dialog appears when one or more vaults are selected. -->
+<div id="action-panel">
+</div>
+
+<div class="offcanvas offcanvas-end" tabindex="-1"
+  id="offcanvasVaultDetail" 
+  aria-labelledby="offcanvasVaultDetailLabel">
+  <div class="offcanvas-header">
+    <div id="vault-update">
+      <a href="#"
+        id="offcanvasVaultDetailLabel"
+        class="btn btn-secondary offcanvas-title"
+      >
+        Edit
+      </a>
+    </div>
+    <button type="button"
+      class="btn btn-close text-reset"
+      data-bs-dismiss="offcanvas"
+      aria-label="Close">
+    </button>
+  </div>
+  <div class="offcanvas-body">
+    <!-- Vault Detail will be loaded here by htmx -->
+  </div>
+</div>
+
+{% endblock %}
+
+{% block exclusive_js %}
+  {% if show_recent_updated_vault %}
+    const recentModifiedVaultUrl = "{{ recent_modified_vault_url }}";
+
+    htmx.ajax('GET', recentModifiedVaultUrl, {
+      target: '#offcanvasVaultDetail .offcanvas-body',
+      swap: 'innerHTML',
+    }).then(() => {
+      document.getElementById('spinner').style.display = 'none';
+      
+      const offcanvasVaultDetailElement = document.getElementById('offcanvasVaultDetail');
+      const offcanvas = new bootstrap.Offcanvas(offcanvasVaultDetailElement);
+      offcanvas.show();
+  
+      {% if created %}
+        Toast.fire({
+          icon: "success",
+          title: "Vault Created Successfully",
+          text: "You have successfully created the vault.",
+        });
+      {% endif %}
+  
+      {% if updated %}
+        Toast.fire({
+          icon: "success",
+          title: "Vault Updated Successfully",
+          text: "You have successfully updated the vault.",
+        });
+      {% endif %}
+  
+      setTimeout(() => {
+        offcanvas.hide();
+        const offcanvasBackdrop = document.querySelector('.offcanvas-backdrop');
+        if (offcanvasBackdrop) {
+          offcanvasBackdrop.remove();
+        }
+      }, 1000);
+    });
+  {% endif %}
+
+  /* Refresh vault search results when clear search input value using Ctrl+Delete. */
+  document.querySelector('input[role="search-input').addEventListener('keydown', function (evt) {
+    if (evt.ctrlKey && evt.key === 'Delete') { // Ctrl+Delete
+      evt.preventDefault();
+      this.value = "";
+      this.setAttribute('hx-trigger', 'true')
+      htmx.trigger(this, 'htmx:trigger');
+    } else if (evt.keyCode === 13 || evt.key === 'Enter') {
+      evt.preventDefault();
+      this.setAttribute('hx-trigger', 'true')
+      htmx.trigger(this, 'htmx:trigger');
+    }
+  });
+{% endblock %}
+
+<script type="text/javascript" src="{% static 'js/vault/offcanvas.js' %}" defer></script>

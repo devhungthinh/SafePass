@@ -1,0 +1,25 @@
+{% extends '_base.html' %}
+{% load crispy_forms_tags %}
+
+{% block title %}Profile Update Page{% endblock %}
+
+{% block content %}
+
+<p class="fw-medium fs-5 mb-2 text-center">Edit Profile</p>
+
+<form method="post">
+  {% csrf_token %}
+  {{ form|crispy }}
+  {{ profile_formset.management_form }}
+  {{ profile_formset|crispy }}
+  <button type="submit"
+    class="btn btn-success">
+    Save
+  </button>
+  <a href="{% url 'users:profile_detail' pk=user.profile.pk %}"
+    class="btn btn-outline-danger">
+    Cancel
+  </a>
+</form>
+
+{% endblock %}

@@ -1,0 +1,47 @@
+{% extends '_base.html' %}
+{% load crispy_forms_tags %}
+
+{% block title %}User Settings Page{% endblock %}
+
+{% block breadcrumb %}
+<li class="breadcrumb-item active">
+  <a href="{% url 'about' %}" aria-current="page">Settings</a>
+</li>
+{% endblock %}
+
+{% block content %}
+<div class="mb-2 d-flex justify-content-between align-items-center">
+  <span class="fw-medium fs-5">Settings</span>
+  <a href="#" class="btn btn-outline-primary">Edit</a>
+</div>
+    
+<div class="card mb-3">
+  <div class="card-body">
+    <h5 class="card-title">Preferences</h5>
+    <p><strong>Theme:</strong> {{ settings.theme }}</p>
+    <p><strong>Language:</strong> {{ settings.language }}</p>
+    <p><strong>Notifications Enabled:</strong> {{ settings.notifications_enabled }}</p>
+    <p><strong>Items Per Page:</strong> {{ settings.items_per_page }}</p>
+  </div>
+</div>
+
+<div class="card mb-3">
+  <div class="card-body">
+    <form action="{% url 'accounts:logout' %}" method="post">
+      {% csrf_token %}
+      <button type="submit"
+        class="btn btn-outline-secondary"
+      >
+        Log Out
+      </button>
+    </form>
+  </div>
+</div>
+
+{% endblock %}
+
+{% block exclusive_js %}
+
+
+
+{% endblock %}

@@ -1,0 +1,31 @@
+{% load static %}
+{% load crispy_forms-tags %}
+
+<table>
+  {{ formset.manage_form|crispy }}
+  {% for form in formset.forms %}
+    <tr class="{% cycle 'row1' 'row2' %} formset_row-{{ formset.prefix }}">
+      <td>
+        {# Include the hidden fields in the form #}
+        {% if forloop.first %}
+          {% for hidden in form.hidden_fiels %}
+            {{ hidden }}
+          {% endfor %}
+        {% endif %}
+        {{ field.errors.as_ul }}
+        {{ field|as_crispy_field }}
+      </td>
+    </tr>
+  {% endfor %}
+</table>
+<br>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script src="{% static 'js/jquery.formset.js' %}"></script>
+<script type="text/javascript">
+  $('.formset_row-{{ formset.prefix }}').formset({
+      addText: 'add another',
+      deleteText: 'remove',
+      prefix: '{{ formset.prefix }}',
+  });
+</script>
+

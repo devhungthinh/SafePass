@@ -1,0 +1,33 @@
+{% extends '_base.html' %}
+{% load crispy_forms_tags %}
+
+{% block title %}Login{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center align-items-center" style="height: 100%;">
+  <div class="col-md-6 translate-middle-y">
+    <h2 class="text-center">Enter SafePass</h2>
+    <form method="post">
+      {% csrf_token %}
+      {{ form|crispy }}
+      <div class="d-flex flex-column justify-content-center align-items-center gap-3">
+        <button type="submit"
+          class="btn btn-success"
+        >
+          Unlock SafePass
+        </button>
+        <p>If you do not have an account, please register 
+          <a href="{% url 'accounts:signup' %}" 
+            class="text-decoration-none">here</a>.
+        </p>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}
+
+{% block exclusive_js %}
+
+document.querySelector('div#bdSidebar').classList.add('d-none');
+
+{% endblock %}
